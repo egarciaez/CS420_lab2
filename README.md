@@ -25,12 +25,11 @@ From the root of the project (where the `Dockerfile` is located), build the imag
 Build the Docker Image From the project root (where Dockerfile is located):
 
 docker build -t log-analyzer .
-
+```
 This creates a local Docker image called log-analyzer
 Copies the application code into the container
 Installs any dependencies
 Prepares the app to run inside the container
-```
 
 
 ### Run the Application (Docker): 
