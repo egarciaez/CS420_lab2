@@ -36,7 +36,7 @@ log-analyzer/
 git clone https://github.com/<your-username>/log-analyzer.git
 cd log-analyzer
 
-### Build the Docker Image
+### Build the Docker Image (Required)
 
 From the root of the project 
 (where the `Dockerfile` is located), build the image:
@@ -52,6 +52,14 @@ This creates a local Docker image called log-analyzer
 Copies the application code into the container
 Installs any dependencies
 Prepares the app to run inside the container
+
+### Confirm the image exists
+```bash
+docker images
+```
+You should see something like this: 
+<img width="589" height="36" alt="image" src="https://github.com/user-attachments/assets/561a3aad-071b-4171-adfc-4d61ca6ff575" />
+
 
 
 ### Run the Application (Docker): 
