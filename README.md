@@ -6,6 +6,25 @@ This application is a Dockerized command-line tool that analyzes application log
 It is designed to run entirely inside a Docker container and requires only a single
 `docker run` command to execute.
 
+## Structure
+```bash
+log-analyzer/
+├── app/
+│ ├── init.py
+│ ├── analyzer.py
+│ └── cli.py
+├── logs/
+│ └── starterLog.log
+├── Dockerfile
+├── requirements.txt
+└── README.md
+
+- `app/` → Python package with the application code  
+- `logs/` → Sample logs (replace or add your own logs here)  
+- `Dockerfile` → Defines the container image  
+- `requirements.txt` → Python dependencies (none external in this version)  
+```
+
 ### Prerequisites
 - Docker installed and running
 - GitHub Codespaces or a local development environment
