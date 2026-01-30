@@ -2,9 +2,13 @@ import argparse
 from pathlib import Path
 from analyzer import LogAnalyzer
 
+
 def print_report(report: dict):
+    """
+    Nicely print the analysis summary.
+    """
     print("\n📊 Log Analysis Summary")
-    print("-" * 30)
+    print("-" * 40)
     print(f"Total log entries: {report['total_entries']}")
 
     if report["time_range"]:
@@ -16,7 +20,8 @@ def print_report(report: dict):
     print("\nLog Levels:")
     for level, count in report["level_counts"].items():
         print(f"  {level}: {count}")
-    print("-" * 30)
+    print("-" * 40)
+
 
 def main():
     parser = argparse.ArgumentParser(
@@ -27,7 +32,6 @@ def main():
         required=True,
         help="Directory containing .log files"
     )
-
     args = parser.parse_args()
     log_dir = Path(args.log_dir)
 
@@ -39,5 +43,7 @@ def main():
         print(f"Error: {e}")
         exit(1)
 
+
 if __name__ == "__main__":
     main()
+
