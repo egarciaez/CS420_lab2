@@ -23,7 +23,9 @@ From the root of the project
 (where the `Dockerfile` is located), build the image:
 
 ```bash
-Build the Docker Image From the project root (where Dockerfile is located):
+Build the Docker Image From the project root
+(where Dockerfile is located):
+Run this first:
 
 docker build -t log-analyzer .
 ```
@@ -35,6 +37,7 @@ Prepares the app to run inside the container
 
 ### Run the Application (Docker): 
 ```bash
+Run this next: 
 macOS / Linux (Bash / Zsh): 
 docker run --rm -v $(pwd)/logs:/logs log-analyzer --log-dir /logs
 
