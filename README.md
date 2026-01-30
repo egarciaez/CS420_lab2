@@ -30,14 +30,17 @@ This creates a local Docker image called log-analyzer
 Copies the application code into the container
 Installs any dependencies
 Prepares the app to run inside the container
+```
 
 
-### Run the Application (Docker)
+### Run the Application (Docker): 
+```bash
 macOS / Linux (Bash / Zsh): 
 docker run --rm -v $(pwd)/logs:/logs log-analyzer --log-dir /logs
 
 Windows (PowerShell): 
 docker run --rm -v ${PWD}/logs:/logs log-analyzer --log-dir /logs
+```
 
 
 Explanation:
