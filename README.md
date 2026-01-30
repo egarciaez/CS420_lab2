@@ -57,7 +57,7 @@ Prepares the app to run inside the container
 ```bash
 docker images
 ```
-You should see something like this: 
+## You should see something like this: 
 <img width="589" height="36" alt="image" src="https://github.com/user-attachments/assets/561a3aad-071b-4171-adfc-4d61ca6ff575" />
 
 
