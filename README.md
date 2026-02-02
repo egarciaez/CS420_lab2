@@ -17,7 +17,7 @@ log-analyzer/
 │ └── starterLog.log
 ├── Dockerfile
 ├── requirements.txt
-└── README.md
+README.md
 
 - `app/` → Python package with the application code  
 - `logs/` → Sample logs (replace or add your own logs here)  
