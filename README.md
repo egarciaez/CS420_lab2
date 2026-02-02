@@ -55,6 +55,7 @@ Prepares the app to run inside the container
 
 ## Confirm the image exists
 ```bash
+Run this next: 
 docker images
 ```
 #### You should see something like this: 
