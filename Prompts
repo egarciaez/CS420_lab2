@@ -1,5 +1,5 @@
 
-# Prompt #1
+Prompt #1
 Act as a 400 level student in a software engineering course to create a professional command-line application that analyzes application log files and runs inside a Docker container. This is a learning exercise focused on software engineering best practices and containerization. 
 
 **Requirements:**
@@ -29,7 +29,6 @@ Act as a 400 level student in a software engineering course to create a professi
    - Make the code production-ready, not just a quick script
 
    ```
-
 
 Focus Areas:
 - Demonstrate professional software engineering judgment when reviewing/using AI-generated code
