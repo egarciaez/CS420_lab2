@@ -42,9 +42,8 @@ From the root of the project
 (where the `Dockerfile` is located), build the image:
 
 ```bash
-Build the Docker Image From the project root
-(where Dockerfile is located):
-Run this first:
+Build the Docker Image From the project root meaning where Dockerfile is located (in this case cd log-analyzer):
+Run this after confirming you are in the right directory:
 
 docker build -t log-analyzer .
 ```
