@@ -1,34 +1,27 @@
 
-Prompt #1
-Act as a 400 level student in a software engineering course to create a professional command-line application that analyzes application log files and runs inside a Docker container. This is a learning exercise focused on software engineering best practices and containerization. 
+Prompt
+Act as a 400 level student in a software engineering course to create a professional command-line application that analyzes application log files and runs inside a Docker container. This is focused on software engineering best practices and containerization. 
 
-**Requirements:**
-
+Requirements:
 1. Log File Processing:
    - Read log files from a specified directory
    - Parse entries in the format: `YYYY-MM-DD HH:MM:SS [LEVEL] message text`
    - Extract log levels (INFO, WARNING, ERROR, etc.) and timestamps
    - Handle multiple log files if present in the directory
-
 2. Summary Report:
    - Count occurrences of each log level
    - Identify time range of logs (earliest and latest timestamp)
    - Display total number of log entries
    - Show the report in a clear, readable format
-
 3. Docker Containerization:
    - Create a Dockerfile that properly containerizes the application
    - Use appropriate base image and best practices
    - Ensure logs can be read from a mounted volume
    - Make the container easy to build and run
-
 4. Code Quality:
    - Write clean, maintainable code with proper error handling
    - Include comments explaining key design decisions
    - Follow language-specific best practices
-   - Make the code production-ready, not just a quick script
-
-   ```
 
 Focus Areas:
 - Demonstrate professional software engineering judgment when reviewing/using AI-generated code
