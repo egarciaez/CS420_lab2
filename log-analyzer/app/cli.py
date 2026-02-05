@@ -5,22 +5,24 @@ from analyzer import LogAnalyzer
 
 def print_report(report: dict):
     """
-    Nicely print the analysis summary.
+    Print the analysis summary in the format specified by the assignment.
     """
-    print("\n📊 Log Analysis Summary")
-    print("-" * 40)
-    print(f"Total log entries: {report['total_entries']}")
+    print("Log Summary")
+    print("-----------")
 
+    # Print log level counts in required order
+    for level in ["INFO", "WARNING", "ERROR"]:
+        print(f"{level}: {report['level_counts'].get(level, 0)}")
+
+    # Print time range
+    print("Time Range:")
     if report["time_range"]:
         start, end = report["time_range"]
-        print(f"Time range: {start} → {end}")
+        print(f"Start: {start}")
+        print(f"End: {end}")
     else:
-        print("Time range: No valid timestamps found")
-
-    print("\nLog Levels:")
-    for level, count in report["level_counts"].items():
-        print(f"  {level}: {count}")
-    print("-" * 40)
+        print("Start: N/A")
+        print("End: N/A")
 
 
 def main():
@@ -46,4 +48,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
