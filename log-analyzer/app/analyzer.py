@@ -2,11 +2,16 @@ import re
 from collections import Counter
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, Optional, Tuple
+from typing import Dict, Optional, Tuple, Iterable
 
-# Regex pattern to parse log lines
+# -------------------- Constants --------------------
+
+TIMESTAMP_FORMAT = "%Y-%m-%d %H:%M:%S"
+LOG_GLOB_PATTERN = "*.log"
+
 LOG_PATTERN = re.compile(
-    r'^(?P<timestamp>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}) '
+    r'^(?P<timestamp>\d{4}-\d{2}-\d{2} '
+    r'\d{2}:\d{2}:\d{2}) '
     r'\[(?P<level>[A-Z]+)\] '
     r'(?P<message>.+)$'
 )
@@ -14,98 +19,119 @@ LOG_PATTERN = re.compile(
 ALLOWED_LEVELS = {"INFO", "WARNING", "ERROR"}
 
 
+# -------------------- Log Analyzer --------------------
+
 class LogAnalyzer:
     """
     Parses and analyzes log files in a directory.
-    Includes robust handling of malformed lines and missing files.
+    Produces counts by log level and a time range summary.
     """
 
     def __init__(self, log_dir: Path):
-        if not log_dir.exists() or not log_dir.is_dir():
-            raise ValueError(f"Log directory does not exist: {log_dir}")
+        self._validate_log_dir(log_dir)
         self.log_dir = log_dir
 
-    def analyze(self) -> Dict:
+    def analyze(self) -> Dict[str, object]:
         """
         Analyze all .log files in the directory.
-        Returns a summary dictionary:
-            - total_entries
-            - level_counts
-            - time_range (earliest, latest)
         """
         level_counts = Counter()
-        total_entries = 0
-        earliest: Optional[datetime] = None
-        latest: Optional[datetime] = None
+        timestamps: list[datetime] = []
 
-        log_files = list(self.log_dir.glob("*.log"))
+        for log_file in self._get_log_files():
+            self._process_file(log_file, level_counts, timestamps)
+
+        return self._build_summary(level_counts, timestamps)
+
+    # -------------------- Helpers --------------------
+
+    def _get_log_files(self) -> Iterable[Path]:
+        log_files = list(self.log_dir.glob(LOG_GLOB_PATTERN))
         if not log_files:
             raise ValueError(f"No .log files found in directory: {self.log_dir}")
+        return log_files
 
-        for log_file in log_files:
-            try:
-                with open(log_file, "r", encoding="utf-8") as f:
-                    for line_num, line in enumerate(f, start=1):
-                        parsed = self._parse_line(line.strip())
-                        if parsed is None:
-                            print(f"Warning: Skipped malformed line {line_num} in {log_file.name}")
-                            continue
+    def _process_file(
+        self,
+        log_file: Path,
+        level_counts: Counter,
+        timestamps: list[datetime]
+    ) -> None:
+        try:
+            with log_file.open("r", encoding="utf-8") as file:
+                for line_num, line in enumerate(file, start=1):
+                    self._process_line(
+                        line.strip(),
+                        log_file.name,
+                        line_num,
+                        level_counts,
+                        timestamps
+                    )
+        except Exception as exc:
+            print(f"Warning: Could not read file {log_file.name}: {exc}")
 
-                        timestamp, level = parsed
+    def _process_line(
+        self,
+        line: str,
+        filename: str,
+        line_num: int,
+        level_counts: Counter,
+        timestamps: list[datetime]
+    ) -> None:
+        parsed = self._parse_line(line)
+        if parsed is None:
+            print(f"Warning: Skipped malformed line {line_num} in {filename}")
+            return
 
-                        if level not in ALLOWED_LEVELS:
-                            print(f"Warning: Unknown log level '{level}' in line {line_num} of {log_file.name}")
-                            continue
+        timestamp, level = parsed
 
-                        level_counts[level] += 1
-                        total_entries += 1
+        if level not in ALLOWED_LEVELS:
+            print(f"Warning: Unknown log level '{level}' in {filename}:{line_num}")
+            return
 
-                        # Update earliest and latest timestamps
-                        if earliest is None or timestamp < earliest:
-                            earliest = timestamp
-                        if latest is None or timestamp > latest:
-                            latest = timestamp
+        level_counts[level] += 1
+        timestamps.append(timestamp)
 
-            except Exception as e:
-                print(f"Warning: Could not read file {log_file.name}: {e}")
+    def _parse_line(self, line: str) -> Optional[Tuple[datetime, str]]:
+        match = LOG_PATTERN.match(line)
+        if not match:
+            return None
 
-        time_range = self._format_time_range(earliest, latest)
+        try:
+            timestamp = datetime.strptime(
+                match.group("timestamp"),
+                TIMESTAMP_FORMAT
+            )
+            return timestamp, match.group("level")
+        except ValueError:
+            return None
+
+    def _build_summary(
+        self,
+        level_counts: Counter,
+        timestamps: list[datetime]
+    ) -> Dict[str, object]:
+        time_range = self._format_time_range(timestamps)
 
         return {
-            "total_entries": total_entries,
+            "total_entries": sum(level_counts.values()),
             "level_counts": dict(level_counts),
             "time_range": time_range
         }
 
-    def _parse_line(self, line: str) -> Optional[Tuple[datetime, str]]:
-        """
-        Parse a single log line.
-        Returns (timestamp, level) or None if invalid.
-        """
-        match = LOG_PATTERN.match(line)
-        if not match:
-            return None
-        try:
-            timestamp = datetime.strptime(
-                match.group("timestamp"),
-                "%Y-%m-%d %H:%M:%S"
-            )
-            level = match.group("level")
-            return timestamp, level
-        except ValueError:
-            return None
-
     def _format_time_range(
         self,
-        earliest: Optional[datetime],
-        latest: Optional[datetime]
+        timestamps: list[datetime]
     ) -> Optional[Tuple[str, str]]:
-        """
-        Format earliest and latest timestamps.
-        """
-        if earliest is None or latest is None:
+        if not timestamps:
             return None
+
         return (
-            earliest.strftime("%Y-%m-%d %H:%M:%S"),
-            latest.strftime("%Y-%m-%d %H:%M:%S"),
+            min(timestamps).strftime(TIMESTAMP_FORMAT),
+            max(timestamps).strftime(TIMESTAMP_FORMAT),
         )
+
+    @staticmethod
+    def _validate_log_dir(log_dir: Path) -> None:
+        if not log_dir.exists() or not log_dir.is_dir():
+            raise ValueError(f"Log directory does not exist: {log_dir}")
