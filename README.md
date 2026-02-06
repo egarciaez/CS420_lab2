@@ -33,9 +33,10 @@ README.md
 
 ---
 ## Clone the Repository (if needed)
-
+```bash
 git clone https://github.com/<your-username>/log-analyzer.git
 cd log-analyzer
+```
 
 ## Build the Docker Image (Required)
 
