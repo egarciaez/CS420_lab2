@@ -81,6 +81,5 @@ Explanation:
 --log-dir /logs → tells the app where to find .log files inside the container
 
 ### Expected Output:
-<img width="395" height="177" alt="image" src="https://github.com/user-attachments/assets/fadc97f5-4656-46f7-b534-7998bc26824b" />
-
+<img width="216" height="134" alt="image" src="https://github.com/user-attachments/assets/866abbfc-9b9c-476a-bfcd-bafb9d34ed84" />
 
